@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+     
+        body {
+            margin: 0;
+            padding: 0;
+        
+        }
+
+        /* 加载中的容器样式 */
+        .loading-container {
+            position: fixed;
+            /* 固定定位，覆盖整个聊天窗口 */
+            top: 0;
+            left: 0;
+            width: 1699px;
+            height: 886px;
+            background-color: rgba(255, 255, 255, 0.5);
+            /* 半透明背景 */
+            display: flex;
+            justify-content: center;
+            /* 水平居中 */
+            align-items: center;
+            /* 垂直居中 */
+            z-index: 9999;
+            /* 确保它在最顶层 */
+            display: none;
+        }
+
+        .text {
+            position: fixed;
+            top: 458px;
+            left: 822px;
+        }
+
+        .text h2 {
+            font-size: 20px;
+            font-weight: 400;
+            color: #aea9fb;
+        }
+         /* 转圈动画的样式 */
+         .spinner {
+            border: 4px solid #f3f3f3;
+            /* 外围边框 */
+            border-top: 4px solid #3498db;
+            /* 顶部边框颜色 */
+            border-radius: 50%;
+            /* 圆形 */
+            width: 50px;
+            /* 宽度 */
+            height: 50px;
+            /* 高度 */
+            animation: spin 1s linear infinite;
+            /* 动画名称，持续时间，速度曲线，循环 */
+        }
+        /* 关键帧动画 */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            /* 初始状态 */
+            100% {
+                transform: rotate(360deg);
+            }
+
+            /* 结束状态 */
+        }
+
+
+         .box1 {
+           
+            background-image: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%);
+         }
+
+        .box {
+
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 20px;
+            background-image: linear-gradient(90deg, #FFBAC3 0%, #C5C1FF 56%, #2CD8D5 100%);
+        }
+
+        /* 选中时的样式 */
+        .selected {
+            box-shadow: 0 0 15px black;
+        }
+
+        .textbox,
+        .savetext,
+        .textsb,
+        .textzj,
+        .textcolor,
+        .imgbox,
+        .imgw,
+        .imgh,
+        .videow,
+        .videoh,
+        .audiobox {
+            position: absolute;
+            top: 300px;
+            font-size: 30px;
+            padding: 10px;
+            padding-left: 15px;
+            border: 5px solid #C5C1FF;
+            outline: none;
+            border-radius: 15px;
+            left: 600px;
+            width: 500px;
+            height: 60px;
+            color: #FFBAC3;
+        }
+
+        .textcolor {
+            position: absolute;
+            top: 300px;
+            left: 800px;
+            width: 100px;
+            height: 100px;
+            padding: 5px;
+        }
+        .heng {
+            /* width: 1680px;
+            height: 700px; */
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .daohang {
+            display: flex;
+
+        }
+
+        .wenzi,
+        .zihao,
+        .ziju,
+        .shipin,
+        .yinpin,
+        .beijing,
+        .yanse,
+        .tupian,
+        .kuandu,
+        .gaodu,
+        .shanchu,
+        .baocun,
+        .xiazai {
+            cursor: pointer;
+            width: 7.43vw;
+            height: 6vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: #2CD8D5 solid 0.3vw;
+            border-right: #2CD8D5 solid 0.3vw;
+        }
+
+
+        .wenzi h5,
+        .zihao h5,
+        .ziju h5,
+        .shipin h5,
+        .yinpin h5,
+        .beijing h5,
+        .yanse h5,
+        .tupian h5,
+        .kuandu h5,
+        .gaodu h5,
+        .baocun h5,
+        .shanchu h5,
+        .xiazai h5 {
+            font-size: 20px;
+            font-family: kaiti;
+        }
+
+        .iconfont {
+            font-size: 30px;
+
+        }
+
+        .yanse,
+        .tupian,
+        .kuandu,
+        .gaodu,
+        .baocun,
+        .shanchu
+         {
+            border-bottom: #C5C1FF solid 0.3vw;
+            border-right: #C5C1FF solid 0.3vw;
+        }
+        .xiazai {
+            border-bottom: #C5C1FF solid 0.3vw;
+            border-right: none;
+        }
+
+        .wenzi:hover,
+        .zihao:hover,
+        .ziju:hover,
+        .beijing:hover,
+        .shipin:hover,
+        .yinpin:hover,
+        .yanse:hover,
+        .tupian:hover,
+        .kuandu:hover,
+        .baocun:hover,
+        .gaodu:hover,
+        .shanchu:hover,
+        .xiazai:hover {
+            color: red;
+            background-color: azure;
+        }
+
+        .xiazai:hover {
+            border-top-right-radius: 20px;
+        }
+
+        .chuangkou {
+            /* background-color: #fff; */
+            width: 1640px;
+            height: 720px;
+
+        }
+
+        .neirongkuang,
+        .neirongkuang1 {
+            width: 100vw;
+            height: 93.41vh;
+            background-color: #fff;
+            border-bottom-right-radius: 20px;
+            /* overflow: scroll; */
+        }
+
+        .uploadbox,
+        .uploadbox2,
+        .uploadbox4,
+        .uploadbox6 {
+            width: 300px;
+            height: 300px;
+            border: 1px dashed #C5C1FF;
+            position: fixed;
+            z-index: 999;
+            top: 300px;
+            right: 622px;
+
+        }
+
+        .tj {
+            width: 80px;
+            height: 35px;
+            border: 1px solid #C5C1FF;
+            border-radius: 15px;
+            background-color: #C5C1FF;
+            position: fixed;
+            z-index: 999;
+            top: 615px;
+            right: 263px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plussign {
+            font-size: 35px;
+            color: #C5C1FF;
+            margin-top: 104px;
+            margin-left: 136px;
+
+        }
+
+        .tj label {
+            cursor: pointer;
+            color: #fff;
+            /* font-size: 50px; */
+        }
+
+        .uploadbox label,
+        .uploadbox2 label,
+        .uploadbox4 label,
+        .uploadbox6 label {
+            font-size: 20px;
+            color: #C5C1FF;
+            margin-left: 110px;
+            cursor: pointer;
+        }
+
+
+
+        .uploadbox1,
+        .uploadbox3,
+        .uploadbox5,
+        .uploadbox7 {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <link rel="stylesheet" href="./导航图标/iconfont.css">
+    <link rel="stylesheet" href="./背景图标/iconfont.css">
+    <link rel="stylesheet" href="./删除图标/iconfont.css">
+    <div class="box1">
+        <div class="box">
+            <!-- 竖着导航栏 -->
+            <!-- 横着的部分 -->
+            <div class="heng">
+                <!-- 导航栏 -->
+                <div class="daohang">
+                    <div class="wenzi iconfont icon-40wenzishezhi" id="wenzi">
+                        <h5>文字</h5>
+                    </div>
+                    <div class="zihao iconfont icon-zihao" id="zihao">
+                        <h5>字号</h5>
+                    </div>
+                    <div class="ziju iconfont icon-ziju" id="ziju">
+                        <h5>字距</h5>
+                    </div>
+                    <div class="beijing iconfont icon-beijingtu" id="beijing">
+                        <h5>背景</h5>
+                    </div>
+                    <div class="shipin iconfont icon-shipin" id="shipin">
+                        <h5>视频</h5>
+                    </div>
+                    <div class="yinpin iconfont icon-yinpinwenjian" id="yinpin">
+                        <h5>音频</h5>
+                    </div>
+                    <div class="yanse iconfont icon-yanse" id="yanse">
+                        <h5>颜色</h5>
+                    </div>
+                    <div class="tupian iconfont icon-tupian" id="tupian">
+                        <h5>图片</h5>
+                    </div>
+                    <div class="kuandu iconfont icon-kuandu" id="kuandu">
+                        <h5>宽度</h5>
+                    </div>
+                    <div class="gaodu iconfont icon-gaodu" id="gaodu">
+                        <h5>高度</h5>
+                    </div>
+                    <div class="baocun iconfont icon-baocun" id="baocun">
+                        <h5>保存</h5>
+                    </div>
+                    <div class="shanchu iconfont icon-shanchu" id="shanchu">
+                        <h5>删除</h5>
+                    </div>
+                    <div class="xiazai iconfont icon-xiazai" id="xiazai">
+                        <h5>下载</h5>
+                    </div>
+                    
+                </div>
+                <div class="chuangkou" id="chuangkou">
+                    <!-- 文本框 -->
+                    <input type="text" id="textbox" class="textbox" style="display: none;">
+                    <!-- 保存框 -->
+                    <input type="text" id="savetext" class="savetext" style="display: none;">
+                    <!-- 字号框 -->
+                    <input type="number" id="textsb" class="textsb" style="display: none;">
+                    <!-- 字距框 -->
+                    <input type="number" id="textzj" class="textzj" style="display: none;">
+                    <!-- 背景框 -->
+                    <div class="uploadbox7" id="uploadbox7">
+                        <div class="uploadbox6" id="uploadbox6"> <!-- 图片框 -->
+                            <div class="plussign">+</div> <!-- 加号 -->
+                            <label for="bckimgbox">上传背景</label><!-- file input 的代替 -->
+                        </div>
+                        <!-- 隐藏的表单 -->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <input type="file" id="bckimgbox" accept="image/*" style="display: none;">
+
+                        </form>
+                    </div>
+                    <!-- 颜色框 -->
+                    <input type="color" id="textcolor" class="textcolor" style="display: none;">
+                    <!-- 图片框 -->
+                    <!-- 图片上传框 -->
+                    <div class="uploadbox1" id="uploadbox1">
+                        <div class="uploadbox" id="uploadbox"> <!-- 图片框 -->
+                            <div class="plussign">+</div> <!-- 加号 -->
+                            <label for="imgbox">上传图片</label><!-- file input 的代替 -->
+                        </div>
+                        <!-- 隐藏的表单 -->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <input type="file" id="imgbox" accept="image/*" style="display: none;">
+
+                        </form>
+                    </div>
+
+                    <!-- 图宽框 -->
+                    <input type="number" id="imgw" class="imgw" style="display: none;">
+                    <!-- 图高框 -->
+                    <input type="number" id="imgh" class="imgh" style="display: none;">
+                    <!-- 视频框 -->
+                    <div class="uploadbox3" id="uploadbox3">
+                        <div class="uploadbox2" id="uploadbox2"> <!-- 视频框 -->
+                            <div class="plussign">+</div> <!-- 加号 -->
+                            <label for="videobox">上传视频</label><!-- file input 的代替 -->
+                        </div>
+                        <!-- 隐藏的表单 -->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <input type="file" id="videobox" accept="video/*" style="display: none;">
+
+                        </form>
+                    </div>
+                    <!-- 视频宽 -->
+                    <input type="number" id="videow" class="videow" style="display: none;">
+                    <!-- 视频高 -->
+                    <input type="number" id="videoh" class="videoh" style="display: none;">
+                    <!-- 音频框 -->
+                    <div class="uploadbox5" id="uploadbox5">
+                        <div class="uploadbox4" id="uploadbox4"> <!-- 视频框 -->
+                            <div class="plussign">+</div> <!-- 加号 -->
+                            <label for="audiobox">上传音频</label><!-- file input 的代替 -->
+                        </div>
+                        <!-- 隐藏的表单 -->
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <input type="file" id="audiobox" accept="audio/*" style="display: none;">
+
+                        </form>
+                    </div>
+                    <input type="text" id="audiobox" class="audiobox" style="display: none;">
+
+                    <!-- 内容框 -->
+                    <!-- 套两个好把背景加进去 -->
+
+                    <div id="loading" class="loading-container">
+                        <!-- 转圈动画的元素 -->
+                        <div class="spinner"></div>
+                        <div class="text">
+                            <h2>加载中,请稍等</h2>
+                        </div>
+                    </div>
+
+
+                    <div class="neirongkuang1" id="neirongkuang1">
+                        <style>
+                            .pimg,
+                            .pvideo,
+                            #paudio {
+                                width: 280px;
+                                height: auto;
+                                position: absolute;
+                                z-index: 1000;
+                            }
+                        </style>
+
+                        <div class="neirongkuang" id="neirongkuang">
+                        </div>
+                        <script>
+                            var audio=document.getElementById('paudio');
+                            document.addEventListener('click',function (){
+                                audio.play();
+                            })
+                        </script>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <script>
+        // 文字
+        var wenzi = document.getElementById('wenzi');
+        // 字号
+        var zihao = document.getElementById('zihao');
+        // 字距
+        var ziju = document.getElementById('ziju');
+        // 背景
+        var beijing = document.getElementById('beijing');
+        // 视频
+        var shipin = document.getElementById('shipin');
+        // 音频
+        var yinpin = document.getElementById('yinpin');
+        // 颜色
+        var yanse = document.getElementById('yanse');
+        // 图片
+        var tupian = document.getElementById('tupian');
+        // 图宽
+        var tukuan = document.getElementById('tukuan');
+        // 图高
+        var tugao = document.getElementById('tugao');
+        // 保存
+        var baocun = document.getElementById('baocun');
+        // 下载
+        var xiazai = document.getElementById('xiazai');
+        // 内容框，白色那块
+        var neirongkuang = document.getElementById('neirongkuang');
+        var neirongkuang1 = document.getElementById('neirongkuang1');
+        var chuangkou = document.getElementById('chuangkou');
+
+// 获取加载容器
+var loadingContainer = document.getElementById('loading');
+
+// 显示加载动画函数，直接调用就可以加载动画
+function showLoading() {
+    loadingContainer.style.display = 'flex'; // 显示加载容器
+}
+
+// 隐藏加载动画函数，也是直接调用
+function hideLoading() {
+    loadingContainer.style.display = 'none'; // 隐藏加载容器
+}
+
+
+
+        //选中函数
+        var xuanzhong = function (name) {
+            name.addEventListener('click', function (e) {
+                // 切换选中状态，如果已选中则取消选中，否则选中
+                name.classList.toggle('selected');
+            });
+
+        }
+        // 移动函数
+        var move = function (name) {
+            xuanzhong(name);
+
+            // 添加鼠标按下事件监听器
+            name.addEventListener('mousedown', function (e) {
+                // 判断是否已选中目标
+                if (name.classList.contains('selected')) {
+                    var rect = name.getBoundingClientRect(); // 获取目标的当前位置
+                    var x = e.clientX - rect.left; // 计算鼠标相对于目标的位置
+                    var y = e.clientY - rect.top;
+                    // 添加鼠标移动事件监听器
+                    document.addEventListener('mousemove', moveHandler);
+
+                    // 鼠标释放事件
+                    document.addEventListener('mouseup', function mouseupHandler(e) {
+                        document.removeEventListener('mousemove', moveHandler); // 移除鼠标移动事件
+                        document.removeEventListener('mouseup', mouseupHandler); // 移除鼠标释放事件
+                    });
+
+                    // 定义移动事件处理函数
+                    function moveHandler(e) {
+                        var newX = e.clientX - x; // 计算新的横坐标
+                        var newY = e.clientY - y; // 计算新的纵坐标
+                        name.style.left = newX + 'px'; // 更新目标的位置
+                        name.style.top = newY + 'px';
+                    }
+                }
+                // 阻止拖动图片新建网页查看图片
+                e.preventDefault(DragEvent);
+
+            });
+        }
+
+        // 滚轮缩放函数
+        function whell(name) {
+
+            // 初始化缩放比例
+            var zoomLevel = 1.0;
+
+            // 设置最大和最小缩放级别
+            var maxZoom = 5.0;
+            var minZoom = 0.1;
+
+            // 监听wheel事件
+            name.addEventListener('wheel', function (event) {
+                // 阻止默认的滚动行为
+                event.preventDefault();
+
+                // 根据滚轮方向计算缩放比例变化
+                var delta = event.deltaY < 0 ? 1.1 : 1 / 1.1;
+
+                // 计算新的缩放比例
+                zoomLevel *= delta;
+
+                // 确保缩放比例不超出最大和最小限制
+                zoomLevel = Math.max(minZoom, Math.min(zoomLevel, maxZoom));
+
+                // 更新图片的尺寸
+                name.style.transform = 'scale(' + zoomLevel + ')';
+                name.style.transformOrigin = 'top left';
+            });
+
+        }
+
+        //输入框点击弹出函数
+        var tanchu = function (dhl, srk) {
+            dhl.addEventListener('click', function a() {
+                if (srk.style.display === 'none') {
+                    srk.style.display = 'block';
+                } else {
+                    srk.style.display = 'none';
+                }
+                document.removeEventListener('click', a);
+                setTimeout(() => dhl.addEventListener('click', a), 1000);
+            });
+        }
+
+
+
+        var i = 99;
+        var textsb = document.getElementById('textsb');
+        tanchu(zihao, textsb);
+        var textzj = document.getElementById('textzj');
+        tanchu(ziju, textzj);
+        var textcolor = document.getElementById('textcolor');
+        tanchu(yanse, textcolor);
+        // 弹出输入框
+        var textbox = document.getElementById('textbox'); 
+        tanchu(wenzi, textbox);
+        //插入文字
+        textbox.addEventListener('change', function () {
+           
+            //创建div来装
+            var textdiv = document.createElement('div');
+            textdiv.className = "textdiv";
+            textdiv.style.position = "absolute";
+            var text = this.value;
+            // 创建文本节点
+            var newtext = document.createTextNode(text);
+            textdiv.appendChild(newtext);
+            neirongkuang.appendChild(textdiv);
+            // 清空输入框
+            textbox.value = '';
+            textbox.style.display = 'none';
+            // 文字移动
+            move(textdiv);
+            whell(textdiv);
+            var textsb = document.getElementById('textsb');
+            // tanchu(zihao, textsb);
+            //改变大小
+            textsb.addEventListener('change', function () {
+
+                if (textdiv.classList.contains('selected')) {
+                    var size = this.value;
+                    if(size>400) size=400;
+                    var selected = document.getElementsByClassName('selected');
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].style.fontSize = size + "px";
+                    }
+                    textsb.value = '';
+                }
+                // 清除输入框
+                textsb.style.display = 'none';
+
+            })
+            //字距框弹出
+            var textzj = document.getElementById('textzj');
+            // tanchu(ziju, textzj);
+            //改变字距
+            textzj.addEventListener('change', function () {
+                if (textdiv.classList.contains('selected')) {
+                    var zj = this.value;
+                    var selected = document.getElementsByClassName('selected');
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].style.letterSpacing = zj + "px";
+                    }
+                    textzj.value = '';
+                }
+                textzj.style.display = 'none';
+            })
+            //颜色框弹出
+            var textcolor = document.getElementById('textcolor');
+            // tanchu(yanse, textcolor);
+            //改变颜色
+            textcolor.addEventListener('change', function () {
+                if (textdiv.classList.contains('selected')) {
+                    var se = this.value;
+                    var selected = document.getElementsByClassName('selected');
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].style.color = se;
+                        console.log(0);
+                    }
+                    // textdiv.style.color = se;
+                }
+                // textcolor.value = '';
+
+                textcolor.style.display = 'none';
+            })
+        
+        });
+
+
+        //宽函数
+        var kuan = function (name, date) {
+            name.addEventListener('change', function () {
+                if (date.classList.contains('selected')) {
+                    var k = this.value;
+                    if(k>800){
+                        k=800;
+                    }
+                    var selected = document.getElementsByClassName('selected');
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].style.width = k + "px";
+                      
+                    }
+                    
+                    name.value = '';
+                }
+                name.style.display = 'none';
+            })
+        }
+
+        //高函数
+        var gao = function (name, date) {
+            name.addEventListener('change', function () {
+                if (date.classList.contains('selected')) {
+                    var g = this.value;
+                    if(g>800){
+                        g=800;
+                    }
+                    var selected = document.getElementsByClassName('selected');
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].style.height = g + "px";
+                      
+                    }
+                    name.value = '';
+                }
+                name.style.display = 'none';
+            })
+        }
+
+
+        // 给上传文件的框弹出
+        function tanchu2(name) {
+            if (name.style.display === 'none') {
+                name.style.display = 'block';
+            } else {
+                name.style.display = 'none';
+            }
+        }
+        // //改变背景
+        var uploadbox7 = document.getElementById('uploadbox7');
+        uploadbckimgfn();
+        beijing.addEventListener('click', function () {
+
+            tanchu2(uploadbox7);
+            uploadbox1.style.display = 'none';
+            uploadbox3.style.display = 'none';
+            uploadbox5.style.display = 'none';
+        })
+
+        // 上传背景函数
+        function uploadbckimgfn() {
+            document.getElementById('bckimgbox').addEventListener('change', function () {
+                // 获取文件列表
+                var files = this.files;
+                var imageUrl='';
+                var formData = new FormData(); 
+                // 这里添加把文件传回给服务器的代码?
+                // 检查是否选择了文件
+                
+                if (files && files[0]) {
+                    const file = files[0];
+                    formData.append('file',file);
+                   showLoading();
+                axios.post('http://localhost:8080/Log/getimage',formData).then(response=>{
+                    imageUrl=response.data.data;
+                    
+                        // 背景地址
+                        neirongkuang.style.backgroundImage = `url(${imageUrl})`;// 换成服务器传回来的地址?
+                        // 居中
+                        neirongkuang.style.backgroundPosition = "center center";
+                        // 不平铺
+                        neirongkuang.style.backgroundRepeat = "no-repeat";
+                        neirongkuang.style.backgroundSize = 'cover';
+                        document.getElementById('uploadbox7').style.display = 'none';
+                    hideLoading();
+
+                })
+                
+
+                    // 创建 FileReader 对象
+            
+                    
+                    
+                }
+            });
+        }
+
+
+        // 上传音频函数
+        function uploadaudiofn() {
+            document.getElementById('audiobox').addEventListener('change', function () {
+                // 获取文件列表
+                var files = this.files;
+                var vedioUrl='';
+                var formData=new FormData();
+                // 这里添加把文件传回给服务器的代码?
+                // 检查是否选择了文件
+                if (files && files[0]) {
+                    const file = files[0];
+                    formData.append('file',file);
+                    showLoading();
+                    axios.post('http://localhost:8080/Log/getvideo',formData).then(response=>{
+                        vedioUrl=response.data.data;
+                        const paudio = document.createElement('audio');
+                        paudio.id = 'paudio';
+                        paudio.src = vedioUrl;// 换成服务器传回来的地址?
+                        paudio.autoplay = true;
+                        paudio.loop = true;
+                        var audiodiv = document.createElement('div');
+                        audiodiv.appendChild(paudio);
+                        neirongkuang.appendChild(audiodiv);
+                        document.getElementById('uploadbox5').style.display = 'none';
+                        hideLoading();
+                    });
+
+                  
+                }
+            });
+        }
+
+        // tanchu(gaodu, imgh);
+        // 上传图片函数
+
+        var videow = document.getElementById('videow');
+        tanchu(kuandu, videow);
+        var videoh = document.getElementById('videoh');
+        tanchu(gaodu, videoh);
+
+        function uploadimgfn() {
+            document.getElementById('imgbox').addEventListener('change', function () {
+                // 获取文件列表
+                var files = this.files;
+                var imageUrl='';
+                var formData=new FormData();
+                // 这里添加把文件传回给服务器的代码?
+                // 检查是否选择了文件
+                if (files && files[0]) {
+                    var file = files[0];
+                    formData.append('file',file);
+                    showLoading();
+                    axios.post('http://localhost:8080/Log/getimage',formData).then(response=>{
+                        imageUrl=response.data.data;
+                        const pimg = document.createElement('img');
+                        pimg.className = 'pimg';
+
+                        pimg.src = imageUrl;// 换成服务器传回来的地址?
+                       
+                        neirongkuang.appendChild(pimg);
+                        document.getElementById('uploadbox1').style.display = 'none';
+                        //图片移动
+
+                        move(pimg);
+                        whell(pimg);
+
+
+                        kuan(videow, pimg);
+
+                        gao(videoh, pimg);
+
+                    hideLoading();
+                    });
+                   
+                    document.getElementById('imgbox').value = "";
+                }
+            });
+
+        }
+
+
+        //图片框弹出
+        var uploadbox1 = document.getElementById('uploadbox1');
+        var imgbox = document.getElementById('imgbox');
+        uploadimgfn();
+        tupian.addEventListener('click', function () {
+
+            tanchu2(uploadbox1);
+            uploadbox7.style.display = 'none';
+            uploadbox3.style.display = 'none';
+            uploadbox5.style.display = 'none';
+        })
+
+
+
+        // 上传视频函数
+        function uploadvideofn() {
+            document.getElementById('videobox').addEventListener('change', function () {
+                // 获取文件列表
+                var files = this.files;
+                var videoUrl='';
+                var formData =new FormData();
+                // 这里添加把文件传回给服务器的代码?
+                // 检查是否选择了文件
+                if (files && files[0]) {
+                    var file = files[0];
+                    formData.append('file',file);
+                    // 创建 FileReader 对象
+                    showLoading();
+                    axios.post('http://localhost:8080/Log/getimage',formData).then(response=>{
+                        videoUrl=response.data.data;
+                        const pvideo = document.createElement('video');
+                        pvideo.className = 'pvideo';
+                        pvideo.src = videoUrl;// 换成服务器传回来的地址?
+                        pvideo.controls = true;
+                        neirongkuang.appendChild(pvideo);
+                        document.getElementById('uploadbox3').style.display = 'none';
+                        //图片移动
+
+                        move(pvideo);
+                        whell(pvideo);
+                        //图宽框弹出
+
+                        kuan(videow, pvideo);
+                        //图高框弹出
+
+                        gao(videoh, pvideo);
+                        hideLoading();
+                    });
+                    document.getElementById('videobox').value = "";
+                }
+            });
+        }
+
+
+
+        //视频框弹出
+        var uploadbox3 = document.getElementById('uploadbox3');
+        // import axios from 'axios';
+        var videobox = document.getElementById('videobox');
+        uploadvideofn();
+        shipin.addEventListener('click', function () {
+            tanchu2(uploadbox3);
+            uploadbox1.style.display = 'none';
+            uploadbox7.style.display = 'none';
+            uploadbox5.style.display = 'none';
+        })
+
+
+
+        // //音频框弹出
+        var uploadbox5 = document.getElementById('uploadbox5');
+        // import axios from 'axios';
+        var audiobox = document.getElementById('audiobox');
+        uploadaudiofn();
+        yinpin.addEventListener('click', function () {
+            tanchu2(uploadbox5);
+            uploadbox1.style.display = 'none';
+            uploadbox3.style.display = 'none';
+            uploadbox7.style.display = 'none';
+        })
+
+
+
+        var savetext = document.getElementById('savetext');
+        tanchu(baocun, savetext);
+        savetext.addEventListener('change',function () {
+            var filename ='';
+                // 获取用户输入的文件名
+                if(savetext.value=='') filename='Content';
+                else filename = savetext.value;
+                var user_id=sessionStorage.getItem('UserID');
+
+                neirongkuang.style.width = "100%";
+                neirongkuang.style.height = "100%";
+
+                // 获取div的内容
+                var content = neirongkuang1.innerHTML;
+
+                // 创建Blob对象
+                var blob = new Blob([content], { type: "text/html" });
+
+                // 创建FormData对象
+                var formData = new FormData();
+                formData.append('file', blob, filename+'.html');
+                formData.append('filename',filename);
+                formData.append('user_id',user_id);
+                axios.post('http://localhost:8080/Log/UserUpLoad',formData).then(response=>{
+                    var da=response.data.data;
+                    alert('保存成功');
+                })
+                //将formdate传给后台？
+                savetext.value = '';
+                savetext.style.display = 'none';
+            })
+
+    
+        
+
+        // 下载
+        var downloadBody = function () {
+            // tanchu(xiazai,textbox);
+            // 背景铺满
+            neirongkuang.style.width = "100%";
+            neirongkuang.style.height = "100%";
+            // 获取内容
+            var content1 = neirongkuang1.innerHTML;
+            // 创建 Blob 对象
+            var blob = new Blob([content1], { type: 'text/html;charset=UTF-8' });
+            // 获取链接
+            var objectURL = URL.createObjectURL(blob);
+            // 创建下载链接
+            var link = document.createElement('a');
+            link.href = objectURL;
+            // 下载的文件名
+            link.download = 'content.html';
+            // 触发点击事件
+            link.click();
+            // console.log('1');
+            // 清除blob对象
+            URL.revokeObjectURL(objectURL);
+        }
+
+        // 添加点击事件监听器，触发下载
+        xiazai.addEventListener('click', downloadBody);
+
+        //删除
+        var shanchu = document.getElementById('shanchu');
+        shanchu.addEventListener('click', function () {
+            var selected = document.getElementsByClassName('selected');
+            for (var i = 0; i < selected.length; i++) {
+                selected[i].style.display = 'none';
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>
