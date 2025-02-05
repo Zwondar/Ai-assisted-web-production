@@ -26,7 +26,7 @@ public class AIDrawTwo {
 
             // 设置请求头
             httpPost.setHeader("Content-Type", "application/json");
-            httpPost.setHeader("Authorization", "sk-9e53b4c8971e47e0afceec65d6594772"); // 使用您自己的 API-Key
+            httpPost.setHeader("Authorization", ""); // 使用您自己的 API-Key
             httpPost.setHeader("X-DashScope-Async", "enable");
 
             // 构建请求体
@@ -65,7 +65,7 @@ public class AIDrawTwo {
             HttpGet httpGet = new HttpGet("https://dashscope.aliyuncs.com/api/v1/tasks/" + taskId);
 
             // 设置请求头
-            httpGet.setHeader("Authorization", "sk-9e53b4c8971e47e0afceec65d6594772"); // 使用您自己的 API-Key
+            httpGet.setHeader("Authorization", ""); // 使用您自己的 API-Key
 
             // 发送请求并获取响应
             HttpResponse response = httpClient.execute(httpGet);
